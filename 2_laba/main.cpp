@@ -2,170 +2,215 @@
 #include <string>
 using namespace std;
 
-
-class Liky {
+class Medicine {
 private:
     string name;
     string instruction;
     double price;
 
 public:
-    Liky() {
-        name = "";
-        instruction = "";
-        price = 0.0;
+    Medicine() {
+        this->name = "";
+        this->instruction = "";
+        this->price = 0.0;
     }
 
-    Liky(string name_, string instruction_, double price_) {
-        name = name_;
-        instruction = instruction_;
-        price = price_;
+    Medicine(string name, string instruction, double price) {
+        this->name = name;
+        this->instruction = instruction;
+        this->price = price;
     }
 
-    ~Liky() {}
+    ~Medicine() {}
 
-    void setName(string value) { name = value; }
-    string getName() { return name; }
+    void setName(string value) {
+        this->name = value;
+    }
 
-    void setInstruction(string value) { instruction = value; }
-    string getInstruction() { return instruction; }
+    string getName() {
+        return this->name;
+    }
 
-    void setPrice(double value) { price = value; }
-    double getPrice() { return price; }
+    void setInstruction(string value) {
+        this->instruction = value;
+    }
+
+    string getInstruction() {
+        return this->instruction;
+    }
+
+    void setPrice(double value) {
+        this->price = value;
+    }
+
+    double getPrice() {
+        return this->price;
+    }
 
     void show() {
-        cout << "Препарат: " << name << endl;
-        cout << "  Інструкція: " << instruction << endl;
-        cout << "  Вартість: " << price << " грн" << endl;
+        cout << "Medicine: " << this->name << endl;
+        cout << "  Instruction: " << this->instruction << endl;
+        cout << "  Price: " << this->price << " UAH" << endl;
     }
 };
 
-
-class Apteka {
+class Pharmacy {
 private:
-    Liky* medicines;
+    Medicine* medicines;
     int count;
 
 public:
-    Apteka(int n) {
-        count = n;
-        medicines = new Liky[count];
+    Pharmacy(int count) {
+        this->count = count;
+        this->medicines = new Medicine[this->count];
     }
 
-    ~Apteka() {
-        delete[] medicines;
+    ~Pharmacy() {
+        delete[] this->medicines;
     }
 
-    void setMedicine(int index, Liky med) {
-        if (index >= 0 && index < count)
-            medicines[index] = med;
+    void setMedicine(int index, Medicine medicine) {
+        if (index >= 0 && index < this->count)
+            this->medicines[index] = medicine;
     }
 
-    Liky getMedicine(int index) {
-        return medicines[index];
+    Medicine getMedicine(int index) {
+        return this->medicines[index];
     }
 
-    int getCount() { return count; }
+    int getCount() {
+        return this->count;
+    }
 
     void showAll() {
-        cout << "\n=== Список ліків в аптеці ===\n";
-        for (int i = 0; i < count; i++) {
-            medicines[i].show();
+        cout << "\n=== List of medicines in the pharmacy ===\n";
+
+        for (int i = 0; i < this->count; i++) {
+            this->medicines[i].show();
         }
     }
 
-
-    bool isAvailable(string medName) {
-        for (int i = 0; i < count; i++) {
-            if (medicines[i].getName() == medName)
+    bool isAvailable(string medicineName) {
+        for (int i = 0; i < this->count; i++) {
+            if (this->medicines[i].getName() == medicineName)
                 return true;
         }
+
         return false;
     }
 
-
-    double getPriceByName(string medName) {
-        for (int i = 0; i < count; i++) {
-            if (medicines[i].getName() == medName)
-                return medicines[i].getPrice();
+    double getPriceByName(string medicineName) {
+        for (int i = 0; i < this->count; i++) {
+            if (this->medicines[i].getName() == medicineName)
+                return this->medicines[i].getPrice();
         }
+
         return -1.0;
     }
 };
 
-
-class Recept {
+class Prescription {
 private:
     string* medicineNames;
     int count;
 
 public:
-    Recept(int n) {
-        count = n;
-        medicineNames = new string[count];
+    Prescription(int count) {
+        this->count = count;
+        this->medicineNames = new string[this->count];
     }
 
-    ~Recept() {
-        delete[] medicineNames;
+    ~Prescription() {
+        delete[] this->medicineNames;
     }
 
     void setMedicineName(int index, string name) {
-        if (index >= 0 && index < count)
-            medicineNames[index] = name;
+        if (index >= 0 && index < this->count)
+            this->medicineNames[index] = name;
     }
 
     string getMedicineName(int index) {
-        return medicineNames[index];
+        return this->medicineNames[index];
     }
 
-    int getCount() { return count; }
+    int getCount() {
+        return this->count;
+    }
 
     void show() {
-        cout << "\n=== Рецепт (потрібні ліки) ===\n";
-        for (int i = 0; i < count; i++) {
-            cout << "  - " << medicineNames[i] << endl;
+        cout << "\n=== Prescription (required medicines) ===\n";
+
+        for (int i = 0; i < this->count; i++) {
+            cout << "  - " << this->medicineNames[i] << endl;
         }
     }
 
-
-    void checkAndCalculate(Apteka& apteka) {
+    void checkAndCalculate(Pharmacy& pharmacy) {
         double total = 0.0;
-        cout << "\n=== Результат перевірки рецепту ===\n";
-        for (int i = 0; i < count; i++) {
-            string med = medicineNames[i];
-            if (apteka.isAvailable(med)) {
-                double price = apteka.getPriceByName(med);
-                cout << "  " << med << " - Є В НАЯВНОСТІ, ціна: " << price << " грн" << endl;
+
+        cout << "\n=== Prescription check result ===\n";
+
+        for (int i = 0; i < this->count; i++) {
+            string medicine = this->medicineNames[i];
+
+            if (pharmacy.isAvailable(medicine)) {
+                double price = pharmacy.getPriceByName(medicine);
+
+                cout << "  " << medicine
+                     << " - AVAILABLE, price: "
+                     << price << " UAH" << endl;
+
                 total += price;
-            } else {
-                cout << "  " << med << " - НЕМАЄ В НАЯВНОСТІ" << endl;
+            }
+            else {
+                cout << "  " << medicine
+                     << " - NOT AVAILABLE" << endl;
             }
         }
-        cout << "\nЗагальна вартість наявних ліків за рецептом: " << total << " грн" << endl;
+
+        cout << "\nTotal cost of available medicines: "
+             << total << " UAH" << endl;
     }
 };
 
 int main() {
-    setlocale(LC_ALL, "Ukrainian");
+    Pharmacy pharmacy(5);
 
+    pharmacy.setMedicine(
+        0,
+        Medicine("Paracetamol", "1 tablet 3 times a day", 25.50)
+    );
 
-    Apteka apteka(5);
-    apteka.setMedicine(0, Liky("Парацетамол", "По 1 таблетці 3 рази на день", 25.50));
-    apteka.setMedicine(1, Liky("Аспірин", "По 1 таблетці після їжі", 18.00));
-    apteka.setMedicine(2, Liky("Нурофен", "По 1 таблетці при болю", 45.90));
-    apteka.setMedicine(3, Liky("Амоксицилін", "По 1 капсулі 2 рази на день", 62.30));
-    apteka.setMedicine(4, Liky("Но-шпа", "По 2 таблетки при спазмах", 33.75));
+    pharmacy.setMedicine(
+        1,
+        Medicine("Aspirin", "1 tablet after a meal", 18.00)
+    );
 
-    apteka.showAll();
+    pharmacy.setMedicine(
+        2,
+        Medicine("Nurofen", "1 tablet when experiencing pain", 45.90)
+    );
 
+    pharmacy.setMedicine(
+        3,
+        Medicine("Amoxicillin", "1 capsule 2 times a day", 62.30)
+    );
 
-    Recept recept(3);
-    recept.setMedicineName(0, "Парацетамол");
-    recept.setMedicineName(1, "Нурофен");
-    recept.setMedicineName(2, "Ібупрофен");
+    pharmacy.setMedicine(
+        4,
+        Medicine("No-Spa", "2 tablets when experiencing spasms", 33.75)
+    );
 
-    recept.show();
-    recept.checkAndCalculate(apteka);
+    pharmacy.showAll();
+
+    Prescription prescription(3);
+
+    prescription.setMedicineName(0, "Paracetamol");
+    prescription.setMedicineName(1, "Nurofen");
+    prescription.setMedicineName(2, "Ibuprofen");
+
+    prescription.show();
+    prescription.checkAndCalculate(pharmacy);
 
     return 0;
 }
